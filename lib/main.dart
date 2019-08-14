@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'package:toast/toast.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
-import 'dart:convert';
 import 'services.dart';
 import 'cart-service.dart';
 import 'models.dart';
@@ -63,7 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onTapItem(BuildContext context, Product product) async {
     addItem(product, 1);
-    Navigator.pushNamed(context, Cart.routeName);
 
     // Navigator.pushNamed(context, ProductDetail.routeName, arguments: ProductArgs(
     //   o.productID, o.name
@@ -72,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> refreshData() async {
-    getProducts();
+    await getProducts();
   }
 
   String formatAmt(double a) {
@@ -132,6 +128,26 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(''),
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
+            ),
+            ListTile(
+              title: Text('Cart'),
+              leading: Icon(Icons.shopping_cart),
+              onTap: () {
+                Navigator.popAndPushNamed(context, Cart.routeName);
+              },
+            ),
+          ],
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: refreshData,

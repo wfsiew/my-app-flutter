@@ -7,7 +7,7 @@ Future<List<CartLine>> getLines() async {
   List<CartLine> ls;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String carts = pref.getString('carts');
-  if (carts.isEmpty) {
+  if (carts == null || carts == '[null]') {
     ls = new List<CartLine>();
   }
 
@@ -26,7 +26,7 @@ void addItem(Product product, int quantity) async {
     var o = new CartLine();
     o.product = product;
     o.quantity = quantity;
-    lines.add(line);
+    lines.add(o);
   }
 
   else {
@@ -39,12 +39,12 @@ void addItem(Product product, int quantity) async {
 void saveCart(List<CartLine> lines) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   if (lines.isEmpty) {
-    pref.remove('carts');
+    await pref.remove('carts');
   }
 
   else {
     String s = jsonEncode(lines);
-    pref.setString('carts', s);
+    await pref.setString('carts', s);
   }
 }
 
@@ -54,6 +54,6 @@ void removeItem(Product product) async {
   saveCart(lines);
 }
 
-void clear() {
+void clear() async {
   saveCart(new List<CartLine>());
 }

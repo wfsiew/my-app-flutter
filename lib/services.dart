@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'models.dart';
 
-String url = 'http://192.168.0.78:5000/api/product';
+String url = 'http://192.168.0.136:5000/api/product';
 
 Future<List<String>> getCategories() async {
   List<String> lx;
