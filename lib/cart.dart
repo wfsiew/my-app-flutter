@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:my_app/cart-service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'models.dart';
@@ -17,13 +18,17 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
 
-  CartLine line;
+  List<CartLine> lines;
+  CartSummary summary;
 
   void getData() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String carts = pref.getString('carts');
-    var x = jsonDecode(carts);
-    print(carts);
+    var ls = await getLines();
+    var cart = CartSummary.getSummary(ls);
+
+    this.setState(() {
+      lines = ls;
+      summary = cart;
+    });
   }
 
   @override
@@ -40,7 +45,7 @@ class _CartState extends State<Cart> {
       ),
       body: Container(
         child: Center(
-          child: Text('carts'),
+          child: Text('carts ${summary.totalPrice} ${summary.totalQuantity}'),
         ),
       ),
     );

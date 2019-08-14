@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 //import 'package:toast/toast.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
-import 'package:my_app/cart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'services.dart';
+import 'cart-service.dart';
 import 'models.dart';
+import 'cart.dart';
 import 'product-detail.dart';
 
 void main() => runApp(MyApp());
@@ -60,41 +61,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  void onTapItem(BuildContext context, Product o) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String carts = pref.getString('carts');
-    if (carts == null) {
-      var line = new List<CartLine>();
-      CartLine x = new CartLine();
-      x.product = o;
-      x.quantity = 1;
-      line.add(x);
-      String cartLine = jsonEncode(line);
-      pref.setString('carts', cartLine);
-    }
-
-    else {
-      var ls = jsonDecode(carts);
-      List<CartLine> line = ls.map<CartLine>((x) => CartLine.fromJson(x)).toList();
-      print('======');
-      print(carts);
-      CartLine k = line.firstWhere((x) => x.product.productID == o.productID, orElse: () => null);
-      print(k);
-      if (k == null) {
-        k = new CartLine();
-        k.product = o;
-        k.quantity = 1;
-        line.add(k);
-      }
-
-      else {
-        k.quantity += 1;
-      }
-
-      String cartLine = jsonEncode(line);
-      pref.setString('carts', cartLine);
-    }
-
+  void onTapItem(BuildContext context, Product product) async {
+    addItem(product, 1);
     Navigator.pushNamed(context, Cart.routeName);
 
     // Navigator.pushNamed(context, ProductDetail.routeName, arguments: ProductArgs(

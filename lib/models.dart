@@ -1,5 +1,3 @@
-import 'package:my_app/cart.dart';
-
 class Product {
   int productID;
   String name;
@@ -61,4 +59,29 @@ class CartLine {
     'product': product.toJson(),
     'quantity': quantity
   };
+}
+
+class CartSummary {
+  int totalQuantity;
+  double totalPrice;
+
+  CartSummary({
+    this.totalQuantity, 
+    this.totalPrice
+  });
+
+  factory CartSummary.getSummary(List<CartLine> lines) {
+    int qty = 0;
+    double total = 0;
+
+    lines.forEach((x) {
+      qty += x.quantity;
+      total += x.product.price * x.quantity;
+    });
+
+    return CartSummary(
+      totalQuantity: qty,
+      totalPrice: total
+    );
+  }
 }
