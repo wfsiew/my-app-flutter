@@ -8,7 +8,7 @@ Future<List<CartLine>> getLines() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String carts = pref.getString('carts');
   if (carts == null || carts == '[null]') {
-    ls = new List<CartLine>();
+    ls = <CartLine>[];
   }
 
   else {

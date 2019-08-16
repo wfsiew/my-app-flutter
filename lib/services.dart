@@ -2,8 +2,9 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'models.dart';
+import 'constants.dart';
 
-String url = 'http://192.168.0.136:5000/api/product';
+final String url = '${Constants.SERVER}/api/product';
 
 Future<List<String>> getCategories() async {
   List<String> lx;
@@ -29,12 +30,22 @@ Future<List<String>> getCategories() async {
   return lx;
 }
 
-Future<List<Product>> getProducts() async {
+Future<List<Product>> getProducts([String category, int page = 1]) async {
   List<Product> lx;
-  var res = await http.get(
-    '$url/1',
-    headers: { "Accept": "application/json" }
-  );
+  var res;
+  if (category == null) {
+    res = await http.get(
+      '$url/$page',
+      headers: { "Accept": "application/json" }
+    );
+  }
+
+  else {
+    res = await http.get(
+      '$url/$category/$page',
+      headers: { "Accept": "application/json" }
+    );
+  }
 
   if (res.statusCode == 200) {
     String resbody = res.body;

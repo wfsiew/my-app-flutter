@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:toast/toast.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
-import 'services.dart';
-import 'cart-service.dart';
-import 'models.dart';
+import 'home.dart';
 import 'cart.dart';
-import 'product-detail.dart';
+import 'category.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,9 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var routes = <String, WidgetBuilder>{
-      Cart.routeName: (BuildContext context) => Cart(title: 'Cart',),
-      ProductDetail.routeName: (BuildContext context) => ProductDetail(title: 'Product Detail',),
+      Home.routeName: (BuildContext context) => Home(title: "My Store"),
+      Cart.routeName: (BuildContext context) => Cart(title: 'My Cart'),
+      Category.routeName: (BuildContext context) => Category(title: 'Categories'),
     };
+
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
@@ -58,61 +57,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  void onTapItem(BuildContext context, Product product) async {
-    addItem(product, 1);
-
-    // Navigator.pushNamed(context, ProductDetail.routeName, arguments: ProductArgs(
-    //   o.productID, o.name
-    // ));
-    //Toast.show(x, context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
-  }
-
-  Future<void> refreshData() async {
-    await getProducts();
-  }
-
-  String formatAmt(double a) {
-    FlutterMoneyFormatter fmf = FlutterMoneyFormatter(
-      amount: a,
-      settings: MoneyFormatterSettings(symbol: 'RM')
-    );
-    return fmf.output.symbolOnLeft;
-  }
-
-  Widget listViewWidget(List<Product> lx) {
-    return Container(
-      child: ListView.builder(
-        itemCount: lx.length,
-        padding: const EdgeInsets.all(2.0),
-        itemBuilder: (context, position) {
-          return Card(
-            child: ListTile(
-              title: Text(
-                '${lx[position].name}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.black
-                )
-              ),
-              subtitle: Text('${lx[position].description}'),
-              leading: IconButton(
-                icon: Icon(Icons.add, size: 24.0, color: Colors.blueAccent),
-                onPressed: () {
-                  Product o = lx[position];
-                  onTapItem(context, o);
-                },
-              ),
-              trailing: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  child: Text('${formatAmt(lx[position].price)}')
-                ),
-              ),
-            )
-          );
-        }
-      )
-    );
+  Future<bool> willPop() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(''),
+          content: Text('Are you sure you want to close application?'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('NO'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            FlatButton(
+              child: Text('YES'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      }
+    ) ?? false;
   }
 
   @override
@@ -123,54 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(''),
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
-            ),
-            ListTile(
-              title: Text('Cart'),
-              leading: Icon(Icons.shopping_cart),
-              onTap: () {
-                Navigator.popAndPushNamed(context, Cart.routeName);
-              },
-            ),
-          ],
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: refreshData,
-        child: FutureBuilder(
-          future: getProducts(),
-          builder: (context, snapshot) {
-            return snapshot.data != null
-              ? listViewWidget(snapshot.data)
-              : Center(child: CircularProgressIndicator());
-          },
-        ),
-      ),
-      // body: RefreshIndicator(
-      //   child: FutureBuilder(
-      //     future: getCategories(),
-      //     builder: (context, snapshot) {
-      //       return snapshot.data != null
-      //         ? listViewWidget(snapshot.data)
-      //         : Center(child: CircularProgressIndicator());
-      //     },
-      //   ),
-      //   onRefresh: refreshData,
-      // )// This trailing comma makes auto-formatting nicer for build methods.
+    return WillPopScope(
+      onWillPop: willPop,
+      child: Home(title: 'Flutter Demo Home Page'),
     );
   }
 }
