@@ -19,7 +19,6 @@ class _QuantityInputState extends State<QuantityInput> {
   String value = '0';
   int productID;
   Function(int, int) onQuantityChanged;
-  final TextEditingController controller = TextEditingController();
 
   _QuantityInputState({
     this.value,
@@ -49,7 +48,6 @@ class _QuantityInputState extends State<QuantityInput> {
 
   void upDateTextQty(int quantity) {
     String v = '$quantity';
-    controller.text = v;
     widget.onQuantityChanged(productID, quantity);
     setState(() {
      value = v;
@@ -59,7 +57,6 @@ class _QuantityInputState extends State<QuantityInput> {
   @override
   void initState() {
     super.initState();
-    controller.text = value;
   }
 
   @override

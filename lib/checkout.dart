@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'input-field.dart';
 
 class Checkout extends StatefulWidget {
   Checkout({Key key, this.title}) : super(key: key);
@@ -14,6 +15,14 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
 
   bool giftwrap = false;
+  String name;
+  String addr1;
+  String addr2;
+  String addr3;
+  String city;
+  String state;
+  String zip;
+  String country;
 
   Widget buildContent() {
     return Container(
@@ -28,20 +37,13 @@ class _CheckoutState extends State<Checkout> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('Name'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Name'
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'Name',
+            onChanged: (String s) {
+              setState(() {
+               name = s; 
+              });
+            },
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
@@ -53,116 +55,61 @@ class _CheckoutState extends State<Checkout> {
               ),
             ),
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('Line 1'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Line 1'
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'Line 1',
+            onChanged: (String s) {
+              setState(() {
+               addr1 = s; 
+              });
+            },
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('Line 2'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Line 2'
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'Line 2',
+            onChanged: (String s) {
+              setState(() {
+               addr2 = s; 
+              });
+            },
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('Line 3'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Line 3'
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'Line 3',
+            onChanged: (String s) {
+              setState(() {
+               addr3 = s; 
+              });
+            },
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('City'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'City',
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'City',
+            onChanged: (String s) {
+              setState(() {
+               city = s; 
+              });
+            },
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('State'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'State'
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'State',
+            onChanged: (String s) {
+              setState(() {
+               state = s; 
+              });
+            },
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('Zip'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Zip'
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'Zip',
+            onChanged: (String s) {
+              setState(() {
+               zip = s; 
+              });
+            },
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 50,
-                child: Text('Country'),
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Country',
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          InputField(
+            label: 'Country',
+            onChanged: (String s) {
+              setState(() {
+               country = s; 
+              });
+            },
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
