@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'cart.dart';
 import 'category.dart';
+import 'checkout.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
       Home.routeName: (BuildContext context) => Home(title: "My Store"),
       Cart.routeName: (BuildContext context) => Cart(title: 'My Cart'),
       Category.routeName: (BuildContext context) => Category(title: 'Categories'),
+      Checkout.routeName: (BuildContext context) => Checkout(title: 'Check out'),
     };
 
     return MaterialApp(

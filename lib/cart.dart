@@ -5,6 +5,7 @@ import 'models.dart';
 import 'helpers.dart';
 import 'bottom-bar.dart';
 import 'quantity-input.dart';
+import 'checkout.dart';
 
 class Cart extends StatefulWidget {
   Cart({Key key, this.title}) : super(key: key);
@@ -27,16 +28,22 @@ class _CartState extends State<Cart> {
     var ls = await getLines();
     var cart = CartSummary.getSummary(ls);
 
-    this.setState(() {
-      lines = ls;
-      summary = cart;
+    setState(() {
+     lines = ls;
+     summary = cart;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    this.getData();
+    getData();
+  }
+
+  void updateQuantity(int productID, int quantity) async {
+    await updateItem(productID, quantity);
+    print('product $productID - qty = $quantity');
+    await getData();
   }
 
   Widget buildList() {
@@ -105,7 +112,8 @@ class _CartState extends State<Cart> {
             return Container(
               child: Center(
                 child: RaisedButton(
-                  color: Colors.redAccent,
+                  color: Colors.red,
+                  elevation: 5,
                   child: Text(
                     'Check Out',
                     style: TextStyle(
@@ -114,7 +122,7 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                   onPressed: () {
-
+                    Navigator.pushNamed(context, Checkout.routeName);
                   },
                 ),
               ),
@@ -139,20 +147,22 @@ class _CartState extends State<Cart> {
                   ),
                 ),
                 leading: IconButton(
-                  icon: Icon(Icons.delete, size: 24.0, color: Colors.redAccent),
+                  icon: Icon(Icons.delete, size: 24.0, color: Colors.red),
                   onPressed: () async {
-                    removeItem(lines[index].product);
-                    setState(() {
-                      lines.removeAt(index);
-                      var cart = CartSummary.getSummary(lines);
-                      summary = cart;
-                    });
+                    await removeItem(lines[index].product);
+                    await getData();
                   },
                 ),
                 trailing: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    child: QuantityInput(value: '${lines[index].quantity}'),
+                  child: SizedBox(
+                    width: 140,
+                    height: 20,
+                    child: QuantityInput(
+                      value: '${lines[index].quantity}',
+                      productID: lines[index].product.productID,
+                      onQuantityChanged: updateQuantity,
+                    ),
                   ),
                 ),
               ),
@@ -165,7 +175,6 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),

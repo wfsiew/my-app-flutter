@@ -19,7 +19,7 @@ Future<List<CartLine>> getLines() async {
   return ls;
 }
 
-void addItem(Product product, int quantity) async {
+Future<void> addItem(Product product, int quantity) async {
   List<CartLine> lines = await getLines();
   CartLine line = lines.firstWhere((x) => x.product.productID == product.productID, orElse: () => null);
   if (line == null) {
@@ -33,10 +33,10 @@ void addItem(Product product, int quantity) async {
     line.quantity += quantity;
   }
 
-  saveCart(lines);
+  await saveCart(lines);
 }
 
-void saveCart(List<CartLine> lines) async {
+Future<void> saveCart(List<CartLine> lines) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   if (lines.isEmpty) {
     await pref.remove('carts');
@@ -48,12 +48,21 @@ void saveCart(List<CartLine> lines) async {
   }
 }
 
-void removeItem(Product product) async {
+Future<void> removeItem(Product product) async {
   List<CartLine> lines = await getLines();
   lines.removeWhere((x) => x.product.productID == product.productID);
-  saveCart(lines);
+  await saveCart(lines);
+}
+
+Future<void> updateItem(int productID, int quantity) async {
+  List<CartLine> lines = await getLines();
+  CartLine line = lines.firstWhere((x) => x.product.productID == productID, orElse: () => null);
+  if (line != null) {
+    line.quantity = quantity;
+    await saveCart(lines);
+  }
 }
 
 void clear() async {
-  saveCart(new List<CartLine>());
+  await saveCart(new List<CartLine>());
 }

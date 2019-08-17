@@ -69,8 +69,8 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void onTapItem(BuildContext context, Product product) async {
-    addItem(product, 1);
+  Future<void> addToCart(Product product) async {
+    await addItem(product, 1);
     final snackBar = SnackBar(content: Text('Added to cart successfully!'), duration: Duration(seconds: 2));
     scaffoldKey.currentState.showSnackBar(snackBar);
 
@@ -122,8 +122,8 @@ class _HomeState extends State<Home> {
         subtitle: Text('${o.description}'),
         leading: IconButton(
           icon: Icon(Icons.add, size: 24.0, color: Colors.red),
-          onPressed: () {
-            onTapItem(context, o);
+          onPressed: () async {
+            await addToCart(o);
           },
         ),
         trailing: Padding(
