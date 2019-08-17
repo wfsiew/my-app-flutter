@@ -71,15 +71,13 @@ class _QuantityInputState extends State<QuantityInput> {
         IconButton(icon: Icon(Icons.remove), color: Colors.red,
           onPressed: value == '1' ? null : minusQty,
         ),
-        SizedBox(
-          width: 30,
-          height: 20,
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: 'Qty'
+        FittedBox(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+            color: Colors.black12,
+            child: Center(
+              child: Text('$value'),
             ),
-            onChanged: setQty,
           ),
         ),
         IconButton(icon: Icon(Icons.add), color: Colors.red,
