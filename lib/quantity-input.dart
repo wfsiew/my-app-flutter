@@ -10,20 +10,18 @@ class QuantityInput extends StatefulWidget {
   @override
   _QuantityInputState createState() => _QuantityInputState(
     value: value, 
-    productID: productID, 
-    onQuantityChanged: onQuantityChanged);
+    productID: productID
+  );
 }
 
 class _QuantityInputState extends State<QuantityInput> {
 
   String value = '0';
   int productID;
-  Function(int, int) onQuantityChanged;
 
   _QuantityInputState({
     this.value,
-    this.productID,
-    this.onQuantityChanged
+    this.productID
   });
 
   void minusQty() {
@@ -52,11 +50,6 @@ class _QuantityInputState extends State<QuantityInput> {
     setState(() {
      value = v;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override

@@ -110,21 +110,21 @@ class _CartState extends State<Cart> {
 
           else if (index == lines.length + 1 && lines.length > 0) {
             return Container(
-              child: Center(
-                child: RaisedButton(
-                  color: Colors.red,
-                  elevation: 5,
-                  child: Text(
-                    'Check Out',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    ),
+              margin: const EdgeInsets.only(left: 5.0, right: 5.0),
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                color: Colors.red,
+                elevation: 5,
+                child: Text(
+                  'Check Out',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, Checkout.routeName);
-                  },
                 ),
+                onPressed: () {
+                  Navigator.pushNamed(context, Checkout.routeName);
+                },
               ),
             );
           }

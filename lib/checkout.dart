@@ -24,133 +24,139 @@ class _CheckoutState extends State<Checkout> {
   String zip;
   String country;
 
+  final formKey = GlobalKey<FormState>();
+
   Widget buildContent() {
     return Container(
       padding: const EdgeInsets.all(10.0),
-      child: ListView(
-        children: <Widget>[
-          Text(
-            'Ship to',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          InputField(
-            label: 'Name',
-            onChanged: (String s) {
-              setState(() {
-               name = s; 
-              });
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-            child: Text(
-              'Address',
+      child: Form(
+        key: formKey,
+        child: ListView(
+          children: <Widget>[
+            Text(
+              'Ship to',
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          InputField(
-            label: 'Line 1',
-            onChanged: (String s) {
-              setState(() {
-               addr1 = s; 
-              });
-            },
-          ),
-          InputField(
-            label: 'Line 2',
-            onChanged: (String s) {
-              setState(() {
-               addr2 = s; 
-              });
-            },
-          ),
-          InputField(
-            label: 'Line 3',
-            onChanged: (String s) {
-              setState(() {
-               addr3 = s; 
-              });
-            },
-          ),
-          InputField(
-            label: 'City',
-            onChanged: (String s) {
-              setState(() {
-               city = s; 
-              });
-            },
-          ),
-          InputField(
-            label: 'State',
-            onChanged: (String s) {
-              setState(() {
-               state = s; 
-              });
-            },
-          ),
-          InputField(
-            label: 'Zip',
-            onChanged: (String s) {
-              setState(() {
-               zip = s; 
-              });
-            },
-          ),
-          InputField(
-            label: 'Country',
-            onChanged: (String s) {
-              setState(() {
-               country = s; 
-              });
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-            child: Text(
-              'Options',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              Checkbox(
-                value: giftwrap,
-                onChanged: (bool b) {
-                  setState(() {
-                  giftwrap = b; 
-                  });
-                },
-              ),
-              Text('Gift wrap these items'),
-            ],
-          ),
-          Center(
-            child: RaisedButton(
-              color: Colors.red,
-              elevation: 5,
-              child: Text(
-                'Complete Order',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                ),
-              ),
-              onPressed: () {
-
+            InputField(
+              label: 'Name',
+              onChanged: (String s) {
+                setState(() {
+                 name = s;
+                 print('============== $s');
+                });
               },
             ),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 5.0),
+              child: Text(
+                'Address',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            InputField(
+              label: 'Line 1',
+              onChanged: (String s) {
+                setState(() {
+                 addr1 = s; 
+                });
+              },
+            ),
+            InputField(
+              label: 'Line 2',
+              onChanged: (String s) {
+                setState(() {
+                 addr2 = s; 
+                });
+              },
+            ),
+            InputField(
+              label: 'Line 3',
+              onChanged: (String s) {
+                setState(() {
+                 addr3 = s; 
+                });
+              },
+            ),
+            InputField(
+              label: 'City',
+              onChanged: (String s) {
+                setState(() {
+                 city = s; 
+                });
+              },
+            ),
+            InputField(
+              label: 'State',
+              onChanged: (String s) {
+                setState(() {
+                 state = s; 
+                });
+              },
+            ),
+            InputField(
+              label: 'Zip',
+              onChanged: (String s) {
+                setState(() {
+                 zip = s; 
+                });
+              },
+            ),
+            InputField(
+              label: 'Country',
+              onChanged: (String s) {
+                setState(() {
+                 country = s; 
+                });
+              },
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 5.0),
+              child: Text(
+                'Options',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Checkbox(
+                  value: giftwrap,
+                  onChanged: (bool b) {
+                    setState(() {
+                     giftwrap = b; 
+                    });
+                  },
+                ),
+                Text('Gift wrap these items'),
+              ],
+            ),
+            Center(
+              child: RaisedButton(
+                color: Colors.red,
+                elevation: 5,
+                child: Text(
+                  'Complete Order',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
+                onPressed: () {
+
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
