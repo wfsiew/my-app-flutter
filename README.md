@@ -1,6 +1,7 @@
 # my_app
 
-A new Flutter project.
+This is my first Flutter project, the backend is using https://github.com/wfsiew/sportsstore_api-dotnet-core
+Please consult me if you have any issue in running this Flutter project.
 
 ## Getting Started
 
