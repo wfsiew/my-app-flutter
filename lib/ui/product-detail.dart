@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'models.dart';
+import 'package:my_app/models/product-args.dart';
 
 class ProductDetail extends StatefulWidget {
   ProductDetail({Key key, this.title}) : super(key: key);

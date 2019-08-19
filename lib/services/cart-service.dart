@@ -1,13 +1,19 @@
+import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'models.dart';
+import 'package:my_app/models/cart.dart';
+import 'package:my_app/models/product.dart';
+import 'package:my_app/constants.dart';
+
+final String url = '${Constants.ORDER_URL}';
 
 Future<List<CartLine>> getLines() async {
   List<CartLine> ls;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String carts = pref.getString('carts');
-  if (carts == null || carts == '[null]') {
+  if (carts == null) {
     ls = <CartLine>[];
   }
 
@@ -63,6 +69,22 @@ Future<void> updateItem(int productID, int quantity) async {
   }
 }
 
-void clear() async {
+Future<bool> checkout(String s) async {
+  bool b = false;
+  var res = await http.post(
+    '$url/checkout',
+    headers: { HttpHeaders.contentTypeHeader: "application/json" },
+    body: s
+  );
+
+  if (res.statusCode == 200) {
+    await clear();
+    b = true;
+  }
+
+  return b;
+}
+
+Future<void> clear() async {
   await saveCart(new List<CartLine>());
 }

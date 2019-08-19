@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'cart-service.dart';
-import 'models.dart';
-import 'helpers.dart';
-import 'bottom-bar.dart';
-import 'quantity-input.dart';
+import 'package:my_app/services/cart-service.dart';
+import 'package:my_app/models/cart.dart';
+import 'package:my_app/helpers.dart';
+import 'package:my_app/shared/widgets/bottom-bar.dart';
+import 'package:my_app/shared/widgets/quantity-input.dart';
 import 'checkout.dart';
 
 class Cart extends StatefulWidget {
@@ -23,6 +23,7 @@ class _CartState extends State<Cart> {
   List<CartLine> lines;
   CartSummary summary;
   int currIndex = 1;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> getData() async {
     var ls = await getLines();
@@ -42,7 +43,6 @@ class _CartState extends State<Cart> {
 
   void updateQuantity(int productID, int quantity) async {
     await updateItem(productID, quantity);
-    print('product $productID - qty = $quantity');
     await getData();
   }
 
@@ -65,6 +65,7 @@ class _CartState extends State<Cart> {
             ),
             Center(
               child: RaisedButton(
+                elevation: 5,
                 child: Text('CONTINUE SHOPPING'),
                 onPressed: () {
                   Navigator.pop(context);
@@ -115,6 +116,7 @@ class _CartState extends State<Cart> {
               child: RaisedButton(
                 color: Colors.red,
                 elevation: 5,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 child: Text(
                   'Check Out',
                   style: TextStyle(
@@ -122,8 +124,16 @@ class _CartState extends State<Cart> {
                     color: Colors.white
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, Checkout.routeName);
+                onPressed: () async {
+                  final b = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Checkout(title: 'Check out')),
+                  ) ?? false;
+                  if (b) {
+                    final snackBar = SnackBar(content: Text('Your order has been successfully checked out!'), duration: Duration(seconds: 5));
+                    scaffoldKey.currentState.showSnackBar(snackBar);
+                    getData();
+                  }
                 },
               ),
             );
@@ -176,6 +186,7 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
         automaticallyImplyLeading: false,

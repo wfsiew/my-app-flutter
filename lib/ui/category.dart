@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'services.dart';
+import 'package:my_app/services/product-service.dart';
 
 class Category extends StatefulWidget {
   Category({Key key, this.title}) : super(key: key);

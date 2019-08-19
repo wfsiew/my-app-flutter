@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'input-field.dart';
+import 'dart:convert';
+import 'package:my_app/shared/widgets/input-field.dart';
+import 'package:my_app/services/cart-service.dart';
+import 'package:my_app/models/order.dart';
+import 'package:my_app/models/checkout-form.dart';
+import 'package:my_app/validators/general.dart';
+import 'package:my_app/validators/checkout.dart';
 
 class Checkout extends StatefulWidget {
   Checkout({Key key, this.title}) : super(key: key);
@@ -26,6 +32,66 @@ class _CheckoutState extends State<Checkout> {
 
   final formKey = GlobalKey<FormState>();
 
+  void showRetry() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(''),
+          content: Text('Error occurred. Do you want to retry?'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('NO'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            FlatButton(
+              child: Text('YES'),
+              onPressed: () async {
+                Navigator.of(context).pop(false);
+                await submit();
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> submit() async {
+    var valid = formKey.currentState.validate();
+    if (!valid) {
+      return;
+    }
+
+    var order = Order(
+      name: name,
+      line1: addr1,
+      line2: addr2,
+      line3: addr3,
+      city: city,
+      state: state,
+      zip: zip,
+      country: country,
+      giftwrap: giftwrap
+    );
+    var lines = await getLines();
+    var fm = CheckoutForm(
+      order: order,
+      lines: lines
+    );
+    var x = jsonEncode(fm);
+    bool b = await checkout(x);
+    if (b) {
+      Navigator.pop(context, b);
+    }
+    
+    else {
+      showRetry();
+    }
+  }
+
   Widget buildContent() {
     return Container(
       padding: const EdgeInsets.all(10.0),
@@ -46,8 +112,11 @@ class _CheckoutState extends State<Checkout> {
               onChanged: (String s) {
                 setState(() {
                  name = s;
-                 print('============== $s');
+                 formKey.currentState.validate();
                 });
+              },
+              validator: (s) {
+                return vRequired(s, 'Name');
               },
             ),
             Container(
@@ -64,15 +133,19 @@ class _CheckoutState extends State<Checkout> {
               label: 'Line 1',
               onChanged: (String s) {
                 setState(() {
-                 addr1 = s; 
+                 addr1 = s;
+                 formKey.currentState.validate();
                 });
+              },
+              validator: (s) {
+                return vRequired(s, 'Line 1');
               },
             ),
             InputField(
               label: 'Line 2',
               onChanged: (String s) {
                 setState(() {
-                 addr2 = s; 
+                 addr2 = s;
                 });
               },
             ),
@@ -80,7 +153,7 @@ class _CheckoutState extends State<Checkout> {
               label: 'Line 3',
               onChanged: (String s) {
                 setState(() {
-                 addr3 = s; 
+                 addr3 = s;
                 });
               },
             ),
@@ -88,16 +161,24 @@ class _CheckoutState extends State<Checkout> {
               label: 'City',
               onChanged: (String s) {
                 setState(() {
-                 city = s; 
+                 city = s;
+                 formKey.currentState.validate();
                 });
+              },
+              validator: (s) {
+                return vRequired(s, 'City');
               },
             ),
             InputField(
               label: 'State',
               onChanged: (String s) {
                 setState(() {
-                 state = s; 
+                 state = s;
+                 formKey.currentState.validate();
                 });
+              },
+              validator: (s) {
+                return vRequired(s, 'State');
               },
             ),
             InputField(
@@ -112,8 +193,12 @@ class _CheckoutState extends State<Checkout> {
               label: 'Country',
               onChanged: (String s) {
                 setState(() {
-                 country = s; 
+                 country = s;
+                 formKey.currentState.validate();
                 });
+              },
+              validator: (s) {
+                return vRequired(s, 'Country');
               },
             ),
             Container(
@@ -139,10 +224,12 @@ class _CheckoutState extends State<Checkout> {
                 Text('Gift wrap these items'),
               ],
             ),
-            Center(
+            Container(
+              width: MediaQuery.of(context).size.width,
               child: RaisedButton(
                 color: Colors.red,
                 elevation: 5,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 child: Text(
                   'Complete Order',
                   style: TextStyle(
@@ -150,8 +237,8 @@ class _CheckoutState extends State<Checkout> {
                     color: Colors.white
                   ),
                 ),
-                onPressed: () {
-
+                onPressed: () async {
+                  await submit();
                 },
               ),
             ),

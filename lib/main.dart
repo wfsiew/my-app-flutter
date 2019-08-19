@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 //import 'package:toast/toast.dart';
-import 'home.dart';
-import 'cart.dart';
-import 'category.dart';
-import 'checkout.dart';
+import 'package:my_app/ui/home.dart';
+import 'package:my_app/ui/cart.dart';
+import 'package:my_app/ui/category.dart';
+import 'package:my_app/ui/checkout.dart';
 
 void main() => runApp(MyApp());
 

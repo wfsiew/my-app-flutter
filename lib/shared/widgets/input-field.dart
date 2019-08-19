@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class InputField extends StatefulWidget {
-  InputField({Key key, this.label, this.onChanged}) : super(key: key);
+  InputField({Key key, this.label, this.onChanged, this.validator}) : super(key: key);
 
   final String label;
   final void Function(String) onChanged;
+  final String Function(String) validator;
 
   @override
   _InputFieldState createState() => _InputFieldState(
@@ -14,9 +15,7 @@ class InputField extends StatefulWidget {
 class _InputFieldState extends State<InputField> {
 
   String label;
-  String value;
   final TextEditingController controller = TextEditingController();
-  final FocusNode focusNode = FocusNode();
 
   _InputFieldState({
     this.label
@@ -24,21 +23,6 @@ class _InputFieldState extends State<InputField> {
 
   void onChange() {
     String text = controller.text;
-    bool hasFocus = focusNode.hasFocus;
-    if (text.length > 0) {
-      controller.selection = TextSelection(
-        baseOffset: text.length,
-        extentOffset: text.length
-      );
-    }
-
-    else {
-      controller.selection = TextSelection(
-        baseOffset: 0,
-        extentOffset: 0
-      );
-    }
-    
     widget.onChanged(text);
   }
 
@@ -46,15 +30,12 @@ class _InputFieldState extends State<InputField> {
   void initState() {
     super.initState();
     controller.addListener(onChange);
-    focusNode.addListener(onChange);
   }
 
   @override
   void dispose() {
     controller.removeListener(onChange);
-    focusNode.removeListener(onChange);
     controller.dispose();
-    focusNode.dispose();
     super.dispose();
   }
 
@@ -62,18 +43,19 @@ class _InputFieldState extends State<InputField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      focusNode: focusNode,
+      validator: (s) {
+        if (widget.validator != null) {
+          return widget.validator(s);
+        }
+
+        return null;
+      },
       decoration: InputDecoration(
         labelText: label,
-        suffixIcon: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            setState(() {
-              controller.clear();
-            });
-            widget.onChanged("");
-          },
-        )
+        errorStyle: TextStyle(
+          fontSize: 15.0,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

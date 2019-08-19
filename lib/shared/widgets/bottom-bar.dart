@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'cart.dart';
+import 'package:my_app/ui/cart.dart';
 
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({Key key, this.index}) : super(key: key);
