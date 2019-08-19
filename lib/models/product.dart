@@ -28,6 +28,6 @@ class Product {
     'name': name,
     'description': description,
     'price': price,
-    'category': category
+    'category': ''
   };
 }

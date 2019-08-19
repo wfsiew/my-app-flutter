@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:my_app/services/product-service.dart';
 import 'package:my_app/services/cart-service.dart';
-import 'package:my_app/ui/category.dart';
+import 'category.dart';
 import 'package:my_app/models/product.dart';
 import 'package:my_app/helpers.dart';
 import 'package:my_app/shared/widgets/bottom-bar.dart';

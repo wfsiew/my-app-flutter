@@ -1,13 +1,16 @@
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_app/models/cart.dart';
 import 'package:my_app/models/product.dart';
+import 'package:my_app/models/checkout-form.dart';
 import 'package:my_app/constants.dart';
 
 final String url = '${Constants.ORDER_URL}';
+final Dio dio = Dio();
 
 Future<List<CartLine>> getLines() async {
   List<CartLine> ls;
@@ -69,20 +72,15 @@ Future<void> updateItem(int productID, int quantity) async {
   }
 }
 
-Future<bool> checkout(String s) async {
-  bool b = false;
-  var res = await http.post(
-    '$url/checkout',
-    headers: { HttpHeaders.contentTypeHeader: "application/json" },
-    body: s
-  );
-
-  if (res.statusCode == 200) {
+Future<void> checkout(CheckoutForm fm) async {
+  try {
+    var res = await dio.post('$url/checkout', data: fm);
     await clear();
-    b = true;
   }
 
-  return b;
+  catch (error) {
+    throw(error);
+  }
 }
 
 Future<void> clear() async {

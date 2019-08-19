@@ -1,25 +1,23 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:my_app/models/product.dart';
 import 'package:my_app/constants.dart';
 
 final String url = '${Constants.PRODUCT_URL}';
+final Dio dio = Dio();
 
 Future<List<String>> getCategories() async {
   List<String> lx;
-  var res = await http.get(
-    '$url/categories',
-    headers: { HttpHeaders.acceptHeader: "application/json" }
-  );
 
-  if (res.statusCode == 200) {
-    String resbody = res.body;
-    var data = jsonDecode(resbody);
-
+  try {
+    var res = await dio.get('$url/categories');
+    var data = res.data;
     var ls = data as List;
-    lx = new List<String>.from(ls);
+    lx = List<String>.from(ls);
+  }
+
+  catch (error) {
+    throw(error);
   }
 
   return lx;
@@ -27,27 +25,21 @@ Future<List<String>> getCategories() async {
 
 Future<List<Product>> getProducts([String category, int page = 1]) async {
   List<Product> lx;
-  var res;
-  if (category == null) {
-    res = await http.get(
-      '$url/$page',
-      headers: { HttpHeaders.acceptHeader: "application/json" }
-    );
+  var _url = '$url/$page';
+
+  if (category != null) {
+    _url = '$url/$category/$page';
   }
 
-  else {
-    res = await http.get(
-      '$url/$category/$page',
-      headers: { HttpHeaders.acceptHeader: "application/json" }
-    );
-  }
-
-  if (res.statusCode == 200) {
-    String resbody = res.body;
-    var data = jsonDecode(resbody);
-
+  try {
+    var res = await dio.get(_url);
+    var data = res.data;
     var ls = data['products'] as List;
     lx = ls.map<Product>((x) => Product.fromJson(x)).toList();
+  }
+
+  catch (error) {
+    throw(error);
   }
 
   return lx;

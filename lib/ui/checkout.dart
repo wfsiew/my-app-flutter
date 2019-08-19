@@ -81,13 +81,12 @@ class _CheckoutState extends State<Checkout> {
       order: order,
       lines: lines
     );
-    var x = jsonEncode(fm);
-    bool b = await checkout(x);
-    if (b) {
-      Navigator.pop(context, b);
+    try {
+      await checkout(fm);
+      Navigator.pop(context, true);
     }
     
-    else {
+    catch (error) {
       showRetry();
     }
   }
