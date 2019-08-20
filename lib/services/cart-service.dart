@@ -1,8 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_app/models/cart.dart';
 import 'package:my_app/models/product.dart';
@@ -10,7 +8,7 @@ import 'package:my_app/models/checkout-form.dart';
 import 'package:my_app/constants.dart';
 
 final String url = '${Constants.ORDER_URL}';
-final Dio dio = Dio();
+final Dio dio = Dio(BaseOptions(connectTimeout: 5000, receiveTimeout: 15000));
 
 Future<List<CartLine>> getLines() async {
   List<CartLine> ls;

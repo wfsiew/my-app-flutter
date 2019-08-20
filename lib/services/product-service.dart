@@ -4,7 +4,7 @@ import 'package:my_app/models/product.dart';
 import 'package:my_app/constants.dart';
 
 final String url = '${Constants.PRODUCT_URL}';
-final Dio dio = Dio();
+final Dio dio = Dio(BaseOptions(connectTimeout: 5000, receiveTimeout: 15000));
 
 Future<List<String>> getCategories() async {
   List<String> lx;
@@ -32,7 +32,7 @@ Future<List<Product>> getProducts([String category, int page = 1]) async {
   }
 
   try {
-    var res = await dio.get(_url, options: Options(connectTimeout: 2000));
+    var res = await dio.get(_url);
     var data = res.data;
     var ls = data['products'] as List;
     lx = ls.map<Product>((x) => Product.fromJson(x)).toList();

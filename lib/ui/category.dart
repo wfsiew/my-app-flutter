@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:my_app/services/product-service.dart';
-import 'package:my_app/shared/widgets/show-error.dart';
+import 'package:my_app/helpers.dart';
 
 class Category extends StatefulWidget {
   Category({Key key, this.title}) : super(key: key);
@@ -15,42 +15,49 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  Future<List<String>> ls;
+
+  List<String> ls = <String>[];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    ls = loadData();
+    load();
   }
 
-  Future<List<String>> loadData() async {
-    return await getCategories();
+  void load() async {
+    try {
+      setState(() {
+       isLoading = true;
+      });
+      var lx = await getCategories();
+      setState(() {
+       ls = lx;
+       isLoading = false; 
+      });
+    }
+
+    catch(error) {
+      setState(() {
+       isLoading = false;
+       handleError(context, error, load);
+      });
+    }
   }
 
   Future<void> refreshData() async {
-    await getCategories();
-  }
-
-  Widget buildSnapshot(BuildContext context, AsyncSnapshot snapshot) {
-    if (snapshot.connectionState == ConnectionState.done) {
-      if (snapshot.hasError) {
-        return ShowError(
-          error: snapshot.error,
-          onRetry: () {
-            setState(() {
-             ls = loadData(); 
-            });
-          },
-        );
-      }
-
-      return buildList(snapshot.data);
+    try {
+      var lx = await getCategories();
+      ls.clear();
+      setState(() {
+       ls = lx; 
+      });
     }
-
-    else {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+    
+    catch(error) {
+      handleError(context, error, () async {
+        await refreshData();
+      });
     }
   }
 
@@ -70,7 +77,11 @@ class _CategoryState extends State<Category> {
     );
   }
 
-  Widget buildList(List<String> ls) {
+  Widget buildList() {
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return Container(
       child: ListView.builder(
         padding: const EdgeInsets.all(2.0),
@@ -90,12 +101,7 @@ class _CategoryState extends State<Category> {
       ),
       body: RefreshIndicator(
         onRefresh: refreshData,
-        child: FutureBuilder(
-          future: ls,
-          builder: (context, snapshot) {
-            return buildSnapshot(context, snapshot);
-          },
-        ),
+        child: buildList(),
       ),
     );
   }

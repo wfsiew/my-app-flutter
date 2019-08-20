@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:my_app/shared/widgets/input-field.dart';
 import 'package:my_app/services/cart-service.dart';
 import 'package:my_app/models/order.dart';
 import 'package:my_app/models/checkout-form.dart';
 import 'package:my_app/validators/general.dart';
+import 'package:my_app/helpers.dart';
 
 class Checkout extends StatefulWidget {
   Checkout({Key key, this.title}) : super(key: key);
@@ -40,31 +42,10 @@ class _CheckoutState extends State<Checkout> {
     });
   }
 
-  void showRetry() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(''),
-          content: Text('Error occurred. Do you want to retry?'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('NO'),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            FlatButton(
-              child: Text('YES'),
-              onPressed: () async {
-                Navigator.of(context).pop(false);
-                await submit();
-              },
-            ),
-          ],
-        );
-      }
-    );
+  void showRetry(DioError error) {
+    handleError(context, error, () async {
+      await submit();
+    });
   }
 
   Future<void> submit() async {
@@ -74,7 +55,7 @@ class _CheckoutState extends State<Checkout> {
     }
 
     var order = Order(
-      name: name,
+      name: '',
       line1: addr1,
       line2: addr2,
       line3: addr3,
@@ -95,7 +76,7 @@ class _CheckoutState extends State<Checkout> {
     }
     
     catch (error) {
-      showRetry();
+      showRetry(error);
     }
   }
 

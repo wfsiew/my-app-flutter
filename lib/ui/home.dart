@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:dio/dio.dart';
 import 'package:my_app/services/product-service.dart';
 import 'package:my_app/services/cart-service.dart';
 import 'category.dart';
 import 'package:my_app/models/product.dart';
 import 'package:my_app/helpers.dart';
 import 'package:my_app/shared/widgets/bottom-bar.dart';
-import 'package:my_app/shared/widgets/show-error.dart';
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -28,7 +26,6 @@ class _HomeState extends State<Home> {
   int page = 1;
   String category;
   bool isLoading = false;
-  DioError error;
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -50,21 +47,22 @@ class _HomeState extends State<Home> {
   }
 
   void load() async {
-    isLoading = true;
     try {
+      setState(() {
+       isLoading = true; 
+      });
       var lx = await getProducts(category = category);
       setState(() {
        page = 1;
        ls = lx;
        isLoading = false;
-       error = null;
       });
     }
     
-    catch(err) {
+    catch(error) {
       setState(() {
        isLoading = false;
-       error = err;
+       handleError(context, error, load);
       });
     }
   }
@@ -74,23 +72,17 @@ class _HomeState extends State<Home> {
     try {
       var lx = await getProducts(category = category, page = p);
       if (lx.length < 1) {
-        setState(() {
-         error = null; 
-        });
         return;
       }
 
       setState(() {
        page = p;
-       error = null;
        ls.addAll(lx);
       });
     }
     
-    catch(err) {
-      setState(() {
-       error = err; 
-      });
+    catch(error) {
+      handleError(context, error, loadMore);
     }
   }
 
@@ -112,13 +104,12 @@ class _HomeState extends State<Home> {
       setState(() {
        page = 1;
        ls = lx;
-       error = null;
       });
     }
     
-    catch(err) {
-      setState(() {
-       error = err; 
+    catch(error) {
+      handleError(context, error, () async {
+        await refreshData();
       });
     }
   }
@@ -171,17 +162,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildList() {
-    if (isLoading && error == null) {
+    if (isLoading) {
       return Center(child: CircularProgressIndicator());
-    }
-
-    else if (error != null) {
-      return ShowError(
-        error: error,
-        onRetry: () {
-          load();
-        },
-      );
     }
 
     return Container(
