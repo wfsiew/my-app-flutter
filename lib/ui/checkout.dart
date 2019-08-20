@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
+import 'dart:async';
 import 'package:my_app/shared/widgets/input-field.dart';
 import 'package:my_app/services/cart-service.dart';
 import 'package:my_app/models/order.dart';
 import 'package:my_app/models/checkout-form.dart';
 import 'package:my_app/validators/general.dart';
-import 'package:my_app/validators/checkout.dart';
 
 class Checkout extends StatefulWidget {
   Checkout({Key key, this.title}) : super(key: key);

@@ -32,7 +32,7 @@ Future<List<Product>> getProducts([String category, int page = 1]) async {
   }
 
   try {
-    var res = await dio.get(_url);
+    var res = await dio.get(_url, options: Options(connectTimeout: 2000));
     var data = res.data;
     var ls = data['products'] as List;
     lx = ls.map<Product>((x) => Product.fromJson(x)).toList();
