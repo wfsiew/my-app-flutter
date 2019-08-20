@@ -1,0 +1,2 @@
+cd c:\apps
+java -jar bundletool-all-0.10.2.jar build-apks --bundle=C:/learn/flutter/my-app-flutter/build/app/outputs/bundle/release/app.aab --output=C:/apps/app.apks --ks=c:/apps/my_app_flutter.jks  --ks-pass=pass:my_app_flutter --ks-key-alias=my_app_flutter --key-pass=pass:my_app_flutter
