@@ -52,6 +52,16 @@ class _InputFieldState extends State<InputField> {
       },
       decoration: InputDecoration(
         labelText: label,
+        suffixIcon: controller.text.isEmpty ? null : 
+        IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () async {
+            await Future.delayed(Duration(milliseconds: 10));
+            setState(() {
+             controller.text = ''; 
+            });
+          },
+        ),
         errorStyle: TextStyle(
           fontSize: 15.0,
           fontWeight: FontWeight.bold,

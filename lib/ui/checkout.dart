@@ -29,8 +29,17 @@ class _CheckoutState extends State<Checkout> {
   String state;
   String zip;
   String country;
+  bool isValid = false;
 
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+     isValid = formKey.currentState?.validate() ?? false;
+    });
+  }
 
   void showRetry() {
     showDialog(
@@ -111,7 +120,7 @@ class _CheckoutState extends State<Checkout> {
               onChanged: (String s) {
                 setState(() {
                  name = s;
-                 formKey.currentState.validate();
+                 isValid = formKey.currentState.validate();
                 });
               },
               validator: (s) {
@@ -133,7 +142,7 @@ class _CheckoutState extends State<Checkout> {
               onChanged: (String s) {
                 setState(() {
                  addr1 = s;
-                 formKey.currentState.validate();
+                 isValid = formKey.currentState.validate();
                 });
               },
               validator: (s) {
@@ -161,7 +170,7 @@ class _CheckoutState extends State<Checkout> {
               onChanged: (String s) {
                 setState(() {
                  city = s;
-                 formKey.currentState.validate();
+                 isValid = formKey.currentState.validate();
                 });
               },
               validator: (s) {
@@ -173,7 +182,7 @@ class _CheckoutState extends State<Checkout> {
               onChanged: (String s) {
                 setState(() {
                  state = s;
-                 formKey.currentState.validate();
+                 isValid = formKey.currentState.validate();
                 });
               },
               validator: (s) {
@@ -193,7 +202,7 @@ class _CheckoutState extends State<Checkout> {
               onChanged: (String s) {
                 setState(() {
                  country = s;
-                 formKey.currentState.validate();
+                 isValid = formKey.currentState.validate();
                 });
               },
               validator: (s) {
@@ -236,7 +245,7 @@ class _CheckoutState extends State<Checkout> {
                     color: Colors.white
                   ),
                 ),
-                onPressed: () async {
+                onPressed: !isValid ? null : () async {
                   await submit();
                 },
               ),
