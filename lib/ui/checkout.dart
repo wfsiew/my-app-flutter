@@ -55,7 +55,7 @@ class _CheckoutState extends State<Checkout> {
     }
 
     var order = Order(
-      name: '',
+      name: name,
       line1: addr1,
       line2: addr2,
       line3: addr3,
